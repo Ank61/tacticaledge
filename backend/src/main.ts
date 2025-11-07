@@ -20,7 +20,7 @@ async function main() {
   app.use(helmet());
   app.use(cookieParser());
 
-  const frontendOrigin = configService.get<string>('FRONTEND_ORIGIN');
+  const frontendOrigin = configService.get<string>('FRONTEND_ORIGIN') || 'http://localhost:3000';
   app.enableCors({
     origin: frontendOrigin ? [frontendOrigin] : [],
     credentials: true,
@@ -36,12 +36,12 @@ async function main() {
       },
     }),
   );
-  const isProduction = configService.get<string>('NODE_ENV') === 'production';
+
   const csrfProtection = csurf({
     cookie: {
       httpOnly: true,
-      sameSite: isProduction ? 'none' : 'lax',
-      secure: isProduction
+      sameSite: 'lax',
+      secure: true
     },
     ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
   });

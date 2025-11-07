@@ -24,6 +24,8 @@ async function main() {
   app.enableCors({
     origin: frontendOrigin ? [frontendOrigin] : [],
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'csrf-token'],
+    exposedHeaders: ['set-cookie']
   });
 
   app.setGlobalPrefix('api');

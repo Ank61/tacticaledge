@@ -36,9 +36,13 @@ async function main() {
       },
     }),
   );
-
+  const isProduction = configService.get<string>('NODE_ENV') === 'production';
   const csrfProtection = csurf({
-    cookie: { httpOnly: true, sameSite: 'lax', secure: false },
+    cookie: {
+      httpOnly: true,
+      sameSite: isProduction ? 'none' : 'lax',
+      secure: isProduction
+    },
     ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
   });
 

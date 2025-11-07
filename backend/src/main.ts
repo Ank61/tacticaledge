@@ -40,7 +40,7 @@ async function main() {
   const csrfProtection = csurf({
     cookie: {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       secure: true
     },
     ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],

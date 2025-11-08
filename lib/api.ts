@@ -1,46 +1,47 @@
 export const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE || "http://localhost:4000/api";
 
-async function getCsrfToken(): Promise<string | undefined> {
-  try {
-    const res = await fetch(`${API_BASE.replace(/\/$/, "")}/csrf-token`, {
-      credentials: "include",
-    });
-    const data = await res.json();
-    return data.csrfToken as string | undefined;
-  } catch {
-    return undefined;
-  }
-}
+// CSRF protection disabled
+// async function getCsrfToken(): Promise<string | undefined> {
+//   try {
+//     const res = await fetch(`${API_BASE.replace(/\/$/, "")}/csrf-token`, {
+//       credentials: "include",
+//     });
+//     const data = await res.json();
+//     return data.csrfToken as string | undefined;
+//   } catch {
+//     return undefined;
+//   }
+// }
 
 export async function api<T = unknown>(
   path: string,
   init?: RequestInit
 ): Promise<T> {
   const method = (init?.method || "GET").toUpperCase();
-  const isFormData = init?.body instanceof FormData;
-  const isJson = init?.body && !isFormData;
+  const isJson = init?.body && !(init.body instanceof FormData);
   const headers: Record<string, string> = isJson
     ? { "Content-Type": "application/json" }
     : {};
 
-  let body = init?.body;
+  const body = init?.body;
 
-  if (method !== "GET" && method !== "HEAD" && !path.startsWith("/auth/")) {
-    const token = await getCsrfToken();
-    if (token) {
-      headers["csrf-token"] = token;
-      headers["X-CSRF-Token"] = token;
-      if (isFormData && body instanceof FormData) {
-        const newFormData = new FormData();
-        for (const [key, value] of body.entries()) {
-          newFormData.append(key, value);
-        }
-        newFormData.append("_csrf", token);
-        body = newFormData;
-      }
-    }
-  }
+  // CSRF protection disabled
+  // if (method !== "GET" && method !== "HEAD" && !path.startsWith("/auth/")) {
+  //   const token = await getCsrfToken();
+  //   if (token) {
+  //     headers["csrf-token"] = token;
+  //     headers["X-CSRF-Token"] = token;
+  //     if (body instanceof FormData) {
+  //       const newFormData = new FormData();
+  //       for (const [key, value] of body.entries()) {
+  //         newFormData.append(key, value);
+  //       }
+  //       newFormData.append("_csrf", token);
+  //       body = newFormData;
+  //     }
+  //   }
+  // }
 
   const res = await fetch(`${API_BASE}${path}`, {
     credentials: "include",

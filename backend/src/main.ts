@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import csurf from 'csurf';
+// import csurf from 'csurf';
 import { ConfigService } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
 import { createLogger } from './util/logger';
@@ -24,7 +24,7 @@ async function main() {
   app.enableCors({
     origin: frontendOrigin ? [frontendOrigin] : [],
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'csrf-token'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['set-cookie']
   });
 
@@ -39,27 +39,28 @@ async function main() {
     }),
   );
 
-  const csrfProtection = csurf({
-    cookie: {
-      httpOnly: true,
-      sameSite: 'none',
-      secure: true
-    },
-    ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
-  });
+  // CSRF protection disabled
+  // const csrfProtection = csurf({
+  //   cookie: {
+  //     httpOnly: true,
+  //     sameSite: 'none',
+  //     secure: true
+  //   },
+  //   ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
+  // });
 
-  app.use(
-    (
-      req: express.Request,
-      res: express.Response,
-      next: express.NextFunction,
-    ) => {
-      if (req.path.startsWith('/api/auth/')) {
-        return next();
-      }
-      return csrfProtection(req, res, next);
-    },
-  );
+  // app.use(
+  //   (
+  //     req: express.Request,
+  //     res: express.Response,
+  //     next: express.NextFunction,
+  //   ) => {
+  //     if (req.path.startsWith('/api/auth/')) {
+  //       return next();
+  //     }
+  //     return csrfProtection(req, res, next);
+  //   },
+  // );
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Movies API')

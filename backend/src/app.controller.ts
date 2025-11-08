@@ -9,18 +9,18 @@ export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly config: ConfigService,
-  ) {}
+  ) { }
 
-  @Get('csrf-token')
-  csrf(
-    @Req() req: Request & { csrfToken?: () => string },
-    @Res() res: Response,
-  ) {
-    try {
-      const token = req.csrfToken ? req.csrfToken() : '';
-      res.json({ csrfToken: token });
-    } catch (error) {
-      res.json({ csrfToken: '' });
-    }
-  }
+  // @Get('csrf-token')
+  // csrf(
+  //   @Req() req: Request & { csrfToken?: () => string },
+  //   @Res() res: Response,
+  // ) {
+  //   try {
+  //     const token = req.csrfToken ? req.csrfToken() : '';
+  //     res.json({ csrfToken: token });
+  //   } catch (error) {
+  //     res.json({ csrfToken: '' });
+  //   }
+  // }
 }
